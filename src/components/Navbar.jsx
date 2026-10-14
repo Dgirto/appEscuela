@@ -1,23 +1,22 @@
 // src/components/Navbar.jsx
-import { IconBirrete, IconSalir } from './Icons';
+import { IconSalir } from './Icons';
+import logoSenati from '../assets/logo-senati-blanco.png';
 
 const Navbar = () => {
   return (
-    <header className="app-navbar">
-      <div className="app-container app-navbar__inner">
-        <div className="app-navbar__brand">
-          <span className="app-navbar__logo">
-            <IconBirrete width={22} height={22} />
+    <header className="navbar-app">
+      <div className="contenedor navbar-app__inner">
+        <div className="navbar-app__marca">
+          <img className="navbar-app__logo" src={logoSenati} alt="Logo SENATI" />
+          <span className="navbar-app__titulo">
+            Sistema de Matrícula <span className="navbar-app__sep">-</span>{' '}
+            <span className="navbar-app__senati">SENATI</span>
           </span>
-          <div className="app-navbar__titles">
-            <span className="app-navbar__title">Sistema de Matrícula</span>
-            <span className="app-navbar__subtitle">SENATI</span>
-          </div>
         </div>
 
-        <button type="button" className="btn-nav" aria-label="Cerrar sesión">
-          <IconSalir width={18} height={18} />
-          <span className="btn-nav__text">Cerrar sesión</span>
+        <button type="button" className="btn-salir">
+          <IconSalir width={16} height={16} />
+          <span>Cerrar Sesión</span>
         </button>
       </div>
     </header>

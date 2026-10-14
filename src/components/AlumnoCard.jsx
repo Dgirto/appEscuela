@@ -12,8 +12,9 @@ const obtenerIniciales = (nombre) =>
     .join('');
 
 // 'estadoInicial' entra como Prop; el estado vive dentro de la card (useState)
-const AlumnoCard = ({ id, nombre, carrera, estadoInicial, foto, onEliminar }) => {
+const AlumnoCard = ({ id, nombre, carrera, estadoInicial, foto, indice, saliendo, cardRef, onEliminar, onSalidaTerminada }) => {
   const [estado, setEstado] = useState(estadoInicial);
+  const [pulso, setPulso] = useState(false);
   // Si la foto no carga (sin internet, enlace roto) se muestran las iniciales
   const [fotoFallida, setFotoFallida] = useState(false);
 
@@ -21,15 +22,20 @@ const AlumnoCard = ({ id, nombre, carrera, estadoInicial, foto, onEliminar }) =>
 
   const cambiarEstado = () => {
     setEstado(esMatriculado ? 'Inactivo' : 'Matriculado');
+    setPulso(true);
   };
 
   return (
-    <article className="alumno-card">
-      <div className="alumno-card__top">
-        <div
-          className={`alumno-card__avatar avatar-${(id % 5) + 1}`}
-          aria-hidden="true"
-        >
+    <article
+      ref={cardRef}
+      className={`alumno-card${saliendo ? ' alumno-card--saliendo' : ''}`}
+      style={{ '--i': indice }}
+      onAnimationEnd={(e) => {
+        if (saliendo && e.target === e.currentTarget) onSalidaTerminada(id);
+      }}
+    >
+      <div className="alumno-card__cabecera">
+        <div className={`alumno-card__avatar avatar-${(id % 6) + 1}`} aria-hidden="true">
           {foto && !fotoFallida ? (
             <img
               src={foto}
@@ -48,29 +54,33 @@ const AlumnoCard = ({ id, nombre, carrera, estadoInicial, foto, onEliminar }) =>
         </div>
       </div>
 
-      <div className="alumno-card__footer">
+      <div className="alumno-card__pie">
         <span
-          className={`estado-badge ${esMatriculado ? 'estado-badge--ok' : 'estado-badge--off'}`}
+          className={`estado ${esMatriculado ? 'estado--ok' : 'estado--off'}${pulso ? ' estado--pulso' : ''}`}
+          onAnimationEnd={() => setPulso(false)}
+          role="status"
           aria-live="polite"
         >
-          <span className="estado-badge__dot" aria-hidden="true" />
+          <span className="estado__punto" aria-hidden="true" />
           {estado}
         </span>
 
         <div className="alumno-card__acciones">
           <button
             type="button"
-            className="btn-accion btn-accion--primario"
+            className="btn btn--secundario"
             onClick={cambiarEstado}
+            disabled={saliendo}
             aria-label={`Cambiar estado de ${nombre}`}
           >
             <IconCambiar width={15} height={15} />
-            Cambiar estado
+            Cambiar Estado
           </button>
           <button
             type="button"
-            className="btn-accion btn-accion--peligro"
+            className="btn btn--peligro"
             onClick={() => onEliminar(id)}
+            disabled={saliendo}
             aria-label={`Eliminar a ${nombre}`}
           >
             <IconPapelera width={15} height={15} />

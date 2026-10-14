@@ -1,55 +1,64 @@
 // src/components/Contador.jsx
-// Panel "Resumen de selección": mismo useState de siempre (sumar / restar).
+// Panel "Alumnos Seleccionados": mismo useState de siempre (sumar / restar).
 import { useState } from 'react';
 import { IconUsuarios, IconMas, IconMenos } from './Icons';
 
 const Contador = ({ max }) => {
   // Inicializamos el estado en 0
   const [numero, setNumero] = useState(0);
+  // Dirección del último cambio, solo para la animación del número
+  const [direccion, setDireccion] = useState('');
 
-  // Si se eliminan alumnos, el valor mostrado nunca supera el total disponible
+  // Nunca baja de 0 ni supera el total de alumnos (aunque se eliminen alumnos)
   const valor = Math.min(numero, max);
 
+  const restar = () => {
+    setNumero(valor - 1);
+    setDireccion('baja');
+  };
+
+  const sumar = () => {
+    setNumero(valor + 1);
+    setDireccion('sube');
+  };
+
   return (
-    <section className="resumen" aria-labelledby="resumen-titulo">
-      <div className="resumen__info">
-        <div className="resumen__icono">
-          <IconUsuarios width={26} height={26} />
-        </div>
+    <section className="panel" aria-labelledby="panel-titulo">
+      <div className="panel__info">
+        <span className="panel__icono">
+          <IconUsuarios width={24} height={24} />
+        </span>
         <div>
-          <h2 id="resumen-titulo" className="resumen__titulo">Resumen de selección</h2>
-          <p className="resumen__texto">
-            Lleva la cuenta de los alumnos que seleccionas para realizar gestiones
-            de matrícula. El valor va de 0 hasta el total de alumnos registrados.
-          </p>
+          <h2 id="panel-titulo" className="panel__titulo">Alumnos Seleccionados</h2>
+          <p className="panel__texto">Ajusta la cantidad de alumnos seleccionados para la matrícula.</p>
         </div>
       </div>
 
-      <div className="resumen__control">
-        <div className="resumen__contador" aria-live="polite">
-          <span className="resumen__numero">{valor}</span>
-          <span className="resumen__de">de {max} alumnos seleccionados</span>
+      <div className="panel__control">
+        <div className="panel__contador" aria-live="polite">
+          <span key={`${valor}-${direccion}`} className={`panel__numero panel__numero--${direccion || 'inicio'}`}>
+            {valor}
+          </span>
+          <span className="panel__de">de {max}</span>
         </div>
 
-        <div className="resumen__botones">
+        <div className="panel__botones">
           <button
             type="button"
-            className="btn-resumen btn-resumen--secundario"
-            onClick={() => setNumero(valor - 1)}
+            className="btn btn--restar"
+            onClick={restar}
             disabled={valor <= 0}
-            aria-label="Restar un alumno seleccionado"
           >
-            <IconMenos width={18} height={18} />
+            <IconMenos width={16} height={16} />
             Restar
           </button>
           <button
             type="button"
-            className="btn-resumen btn-resumen--primario"
-            onClick={() => setNumero(valor + 1)}
+            className="btn btn--sumar"
+            onClick={sumar}
             disabled={valor >= max}
-            aria-label="Sumar un alumno seleccionado"
           >
-            <IconMas width={18} height={18} />
+            <IconMas width={16} height={16} />
             Sumar
           </button>
         </div>

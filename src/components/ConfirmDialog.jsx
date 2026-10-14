@@ -30,14 +30,14 @@ const ConfirmDialog = ({ titulo, mensaje, textoConfirmar = 'Eliminar', onConfirm
           <button
             type="button"
             ref={botonCancelar}
-            className="btn-resumen btn-resumen--secundario"
+            className="btn btn--neutro"
             onClick={onCancelar}
           >
             Cancelar
           </button>
           <button
             type="button"
-            className="btn-resumen btn-resumen--peligro"
+            className="btn btn--confirmar-peligro"
             onClick={onConfirmar}
           >
             {textoConfirmar}
